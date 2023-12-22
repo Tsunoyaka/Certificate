@@ -1,6 +1,6 @@
-import os
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
@@ -23,11 +23,20 @@ class FirstCertificateView(ModelViewSet):
         if self.action in ['create']:
             self.permission_classes = [IsAuthenticated]
         if self.action in ['destroy', 'update', 'partial_update']:
-            self.permission_classes = [IsOwnerOrReadOnly]
+            self.permission_classes = [AllowAny]
         return super().get_permissions()
 
     def retrieve(self, request, *args, **kwargs):
         return get_certificate(request=request, queryset=FirstCertificate, certificate_gen=first_certificate, pk=kwargs['pk'])
+    
+    def list(self, request, *args, **kwargs):
+        certificate = FirstCertificate.objects.filter(student=request.user)
+        serializer = FirstCertificateSerializer(instance=certificate, many=True)
+        return Response(serializer.data)
+    
+class GetAllFirstCertificate(ListAPIView):
+    queryset = FirstCertificate.objects.all()
+    serializer_class = FirstCertificateSerializer
 
 
 class MyCertificatesView(APIView):
@@ -65,6 +74,12 @@ class SecondCertificateView(ModelViewSet):
     
     def retrieve(self, request, *args, **kwargs):
         return get_certificate(request=request, queryset=SecondCertificate, certificate_gen=second_certificate, pk=kwargs['pk'])
+    
+
+    def list(self, request, *args, **kwargs):
+        certificate = SecondCertificate.objects.filter(student=request.user)
+        serializer = SecondCertificateSerializer(instance=certificate, many=True)
+        return Response(serializer.data)
 
 
 class ThirdCertificateView(ModelViewSet):
@@ -83,3 +98,7 @@ class ThirdCertificateView(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return get_certificate(request=request, queryset=ThirdCertificate, certificate_gen=third_certificate, pk=kwargs['pk'])
 
+    def list(self, request, *args, **kwargs):
+        certificate = ThirdCertificate.objects.filter(student=request.user)
+        serializer = ThirdCertificateSerializer(instance=certificate, many=True)
+        return Response(serializer.data)

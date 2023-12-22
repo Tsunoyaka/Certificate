@@ -4,7 +4,7 @@ from datetime import datetime
 def certificate_validation(self, attrs):
     user = self.context.get('request').user
     attrs['student'] = user
-    if 'confirm' or 'reject' in attrs:
+    if 'confirm' and 'reject' in attrs:
         confirm = attrs['confirm']
         reject = attrs['reject']
         if not user.is_staff and confirm or reject:

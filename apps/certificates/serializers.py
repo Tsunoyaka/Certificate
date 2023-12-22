@@ -21,6 +21,8 @@ class FirstCertificateSerializer(serializers.ModelSerializer):
         result = all(not getattr(instance, field) for field in ["confirm", "reject", "consideration", "cancel"])
         if result:
             representation['ineffective'] = True
+        source = f"http://127.0.0.1:8000/certificate/first-certificate/{instance.pk}/"
+        representation['source'] = source
         return representation
     
     
@@ -62,6 +64,8 @@ class SecondCertificateSerializer(serializers.ModelSerializer):
         result = all(not getattr(instance, field) for field in ["confirm", "reject", "consideration", "cancel"])
         if result:
             representation['ineffective'] = True
+        source = f"http://127.0.0.1:8000/certificate/second-certificate/{instance.pk}/"
+        representation['source'] = source
         return representation
 
 
@@ -95,6 +99,8 @@ class ThirdCertificateSerializer(serializers.ModelSerializer):
         result = all(not getattr(instance, field) for field in ["confirm", "reject", "consideration", "cancel"])
         if result:
             representation['ineffective'] = True
+        source = f"http://127.0.0.1:8000/certificate/third-certificate/{instance.pk}/"
+        representation['source'] = source
         return representation
     
     

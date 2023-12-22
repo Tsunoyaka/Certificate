@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from config.celery import app
 from decouple import config
-
+from .models import FirstCertificate, SecondCertificate, ThirdCertificate
 
 @app.task
 def send_report_form(name, phone, route, date, time, auto, place_departure, price, contract_price):
@@ -24,3 +24,11 @@ def send_report_form(name, phone, route, date, time, auto, place_departure, pric
             recipient_list=[config('EMAIL')],
             fail_silently=False
         )
+
+
+def date_chek():
+    first_certificate = FirstCertificate.objects.all()
+    second_cetificate = SecondCertificate.objects.all()
+    third_certificate = ThirdCertificate.objects.all()
+    all_certificate = first_certificate + second_cetificate + third_certificate
+    

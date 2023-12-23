@@ -12,6 +12,21 @@ from .serializers import FirstCertificateSerializer, SecondCertificateSerializer
 from .permission import IsOwnerOrReadOnly
 from .gen_certificate import first_certificate, second_certificate, third_certificate
 from .utils import get_certificate
+from rest_framework import filters  
+
+import django_filters
+
+class FirstCertificateFilter(django_filters.FilterSet):
+    confirm = django_filters.BooleanFilter(field_name='confirm')
+    reject = django_filters.BooleanFilter(field_name='reject')
+    cancel = django_filters.BooleanFilter(field_name='cancel')
+    consideration = django_filters.BooleanFilter(field_name='consideration')
+
+    class Meta:
+        model = FirstCertificate
+        fields = ['confirm', 'reject', 'cancel', 'consideration']
+
+
 
 class FirstCertificateView(ModelViewSet):
     queryset = FirstCertificate.objects.all()
@@ -34,10 +49,17 @@ class FirstCertificateView(ModelViewSet):
         serializer = FirstCertificateSerializer(instance=certificate, many=True)
         return Response(serializer.data)
     
+
 class GetAllFirstCertificate(ListAPIView):
     queryset = FirstCertificate.objects.all()
     serializer_class = FirstCertificateSerializer
+    filter_class = FirstCertificateFilter
+    filter_backends = [filters.OrderingFilter]  
+    ordering_fields = ['issue_date'] 
 
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+ 
 
 class MyCertificatesView(APIView):
     permission_classes = [IsAuthenticated]

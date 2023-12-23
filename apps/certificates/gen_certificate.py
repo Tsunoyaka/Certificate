@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 def first_certificate(certificate):
-    file_path =f"media/second_certificate/{certificate.student.login}{certificate.id}.pdf"
+    file_path =f"media/first_certificate/{certificate.student.login}{certificate.id}.pdf"
     if not os.path.exists(file_path):
         generator = CertificateGenerator(
             file_path=file_path,
